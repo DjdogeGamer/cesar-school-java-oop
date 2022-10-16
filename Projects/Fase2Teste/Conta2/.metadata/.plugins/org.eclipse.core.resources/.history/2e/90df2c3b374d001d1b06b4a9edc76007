@@ -1,0 +1,6 @@
+package br.com.cesarschool.poo.mediators;
+
+
+public enum OperacoesAlterarMediator {
+	ALTERAR_DATA, ENCERRAR, BLOQUEAR, ATIVAR
+}

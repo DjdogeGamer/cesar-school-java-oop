@@ -1,0 +1,108 @@
+package br.com.cesarschool.poo.mediators;
+
+import br.com.cesarschool.poo.entidades.Conta;
+import br.com.cesarschool.poo.repositorios.RepositorioConta;
+
+/**
+ * @author An�nimo
+ *
+ * Implementa��o prim�ria para efeito did�tico.
+ * Ser� melhorada!!!
+ */
+public class ProdutoMediator {
+	
+	private RepositorioConta repositorioProduto = RepositorioConta.getInstancia();
+
+	private static final String MENSAGEM_PRODUTO_NAO_INFORMADO = "Produto n�o informado!";
+	private static final String MENSAGEM_CODIGO_INVALIDO = "C�digo inv�lido!";
+	private static final String MENSAGEM_PRECO_INVALIDO = "Pre�o inv�lido!";
+	private static final String MENSAGEM_NOME_NAO_INFORMADO = "Nome n�o informado!";	
+	private static final String MENSAGEM_NOME_MUITO_CURTO = "Nome muito curto!";
+	private static final String MENSAGEM_TIPO_NAO_PREENCHIDO = "Tipo n�o preenchido!";
+	private static final String MENSAGEM_PRODUTO_JA_CADASTRADO = "Produto j� cadastrado!";
+	private static final String MENSAGEM_PRODUTO_NAO_ENCONTRADO = "Produto n�o encontrado!";
+	private static final String MENSAGEM_STATUS_INVALIDO = "Status informado e invalido";
+	private static final String MENSAGEM_DATA_INVALIDA = "Data informada e invalida";
+	
+	private static final int TAMANHO_MINIMO_NOME = 3;
+	
+	public StatusValidacaoProduto incluir(Conta conta) {
+		StatusValidacaoProduto status = validar(conta);
+		if (status.isValido()) {
+			boolean retornoRepositorio = repositorioProduto.incluir(produto);
+			if (!retornoRepositorio) {
+				status.getCodigosErros()[0] = StatusValidacaoProduto.PRODUTO_JA_CADASTRADO;
+				status.getMensagens()[0] = MENSAGEM_PRODUTO_JA_CADASTRADO;
+				status.setValido(false);
+			}
+		}				
+		return status;
+	}
+	public StatusValidacaoProduto alterar(Conta conta) {
+		StatusValidacaoProduto status = validar(conta);
+		if (status.isValido()) {
+			boolean retornoRepositorio = repositorioProduto.alterar(produto);
+			if (!retornoRepositorio) {
+				status.getCodigosErros()[0] = StatusValidacaoProduto.PRODUTO_NAO_ENCONTRADO;
+				status.getMensagens()[0] = MENSAGEM_PRODUTO_NAO_ENCONTRADO;
+				status.setValido(false);
+			}
+		}				
+		return status;
+	}	
+	public boolean excluir(long codigo) {
+		return repositorioProduto.excluir(codigo);
+	}	
+	public Produto buscar(long codigo) {
+		return repositorioProduto.buscar(codigo);
+	}
+	
+	private StatusValidacaoProduto validar(Conta conta) {
+		int[] codigoStatus = new int[StatusValidacaoProduto.QTD_SITUACOES_EXCECAO]; 
+		String[] mensagensStatus = new String[StatusValidacaoProduto.QTD_SITUACOES_EXCECAO];
+		int contErros = 0;
+		if (conta == null) {
+			codigoStatus[contErros++] = StatusValidacaoProduto.PRODUTO_NAO_INFORMADO;
+			mensagensStatus[contErros] = MENSAGEM_PRODUTO_NAO_INFORMADO;			
+		} else {
+			if (!codigoValido(conta)) {
+				codigoStatus[contErros++] = StatusValidacaoProduto.CODIGO_INVALIDO;
+				mensagensStatus[contErros] = MENSAGEM_CODIGO_INVALIDO;
+			} 
+			if (!precoValido(conta)) {
+				codigoStatus[contErros++] = StatusValidacaoProduto.PRECO_INVALIDO;
+				mensagensStatus[contErros] = MENSAGEM_PRECO_INVALIDO;				
+			}
+			if (!statusValido(conta)) {
+				codigoStatus[contErros++] = StatusValidacaoProduto.STATUS_INVALIDO;
+				mensagensStatus[contErros] = MENSAGEM_STATUS_INVALIDO;
+			}
+			if(!dataValida(conta)) {
+				codigoStatus[contErros++] = StatusValidacaoProduto.DATA_INVALIDA;
+				mensagensStatus[contErros] = MENSAGEM_DATA_INVALIDA;
+			}
+			if (nome.trim().length() < TAMANHO_MINIMO_NOME) {
+				codigoStatus[contErros++] = StatusValidacaoProduto.NOME_MUITO_CURTO;
+				mensagensStatus[contErros] = MENSAGEM_NOME_MUITO_CURTO;								
+			}
+			if (produto.getTipo() == null) {
+				codigoStatus[contErros++] = StatusValidacaoProduto.TIPO_NAO_PREENCHIDO;
+				mensagensStatus[contErros] = MENSAGEM_TIPO_NAO_PREENCHIDO;												
+			}
+		}		
+		return new StatusValidacaoProduto(codigoStatus, mensagensStatus, contErros == 0);		
+	}	
+	private boolean codigoValido(Conta conta) {
+		if (conta.getNumero() <= 0) {
+			return false;
+		}
+		return true;
+	}	
+	
+	private boolean statusValido(Conta conta) {
+		
+	}
+	private boolean precoValido(Conta conta) {
+		return conta.getNumero() > 0;
+	}
+}

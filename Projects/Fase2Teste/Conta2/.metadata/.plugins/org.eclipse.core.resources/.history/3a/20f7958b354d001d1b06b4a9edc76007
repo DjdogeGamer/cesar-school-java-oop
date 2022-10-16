@@ -1,0 +1,160 @@
+package br.com.cesarschool.poo.telas;
+
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.Scanner;
+
+import br.com.cesarschool.poo.entidades.Conta;
+import br.com.cesarschool.poo.entidades.Produto;
+import br.com.cesarschool.poo.entidades.StatusConta;
+import br.com.cesarschool.poo.entidades.TipoProduto;
+import br.com.cesarschool.poo.mediators.ContaMediator;
+import br.com.cesarschool.poo.mediators.StatusValidacaoConta;
+
+
+/**
+ * @author Vitor Carvalho
+ * 
+ */
+public class TelaProduto {
+	
+	private static final String DIGITE_O_NUMERO = "Digite o numero: ";
+	private static final String CONTA_NAO_ENCONTRADA = "Conta nao encontrada!";
+	private static final int NUMERO_DESCONHECIDO = -1;
+	private static final Scanner SC = new Scanner(System.in);
+	private ContaMediator produtoMediator = new ContaMediator(); 
+	
+	public void executaTela() {
+		while(true) {
+			long codigo = NUMERO_DESCONHECIDO;
+			imprimeMenuPrincipal();
+			int opcao = SC.nextInt();
+			if (opcao == 1) {
+				processaInclusao();
+			} else if (opcao == 2) {
+				codigo = processaBusca();
+				if (codigo != NUMERO_DESCONHECIDO) {
+					processaAlteracao(codigo);
+				} 
+			} else if (opcao == 3) {
+				codigo = processaBusca();
+				if (codigo != NUMERO_DESCONHECIDO) {
+					processaExclusao(codigo);
+				}			
+			} else if (opcao == 4) {
+				processaBusca();
+			} else if (opcao == 5) {
+				System.out.println("Saindo do cadastro de produtos");
+				System.exit(0);
+			} else {
+				System.out.println("Op��o inv�lida!!");
+			}
+		} 
+	}
+	
+	private void imprimeMenuPrincipal() {		
+		System.out.println("1- Incluir");
+		System.out.println("2- Alterar");
+		System.out.println("3- Excluir");
+		System.out.println("4- Buscar");
+		System.out.println("5- Sair");
+		System.out.print("Digite a op��o: ");
+	}
+	
+	private void processaMensagensErroValidacao(StatusValidacaoConta status) {
+		String[] mensagensErro = status.getMensagens();
+		System.out.println("Problemas ao incuir/alterar produto:");
+		for (String mensagemErro : mensagensErro) {
+			if (mensagemErro != null) {
+				System.out.println(mensagemErro);
+			} 
+		}
+	}
+	
+	private void processaInclusao() {
+		Conta conta = capturaProduto(NUMERO_DESCONHECIDO);
+		StatusValidacaoConta status = produtoMediator.incluir(conta);
+		if (status.isValido()) { 
+			System.out.println("Produto inclu�do com sucesso!");
+		} else {
+			processaMensagensErroValidacao(status);			
+		}
+	}
+	
+	private void processaAlteracao(long codigo) {
+		Conta produto = capturaProduto(codigo);
+		StatusValidacaoConta status = produtoMediator.alterar(produto);
+		if (status.isValido()) { 
+			System.out.println("Produto alterado com sucesso!");
+		} else {
+			processaMensagensErroValidacao(status);		
+		}
+	}
+	
+	private long processaBusca() {
+		System.out.print(CONTA_NAO_ENCONTRADA);
+		long codigo = SC.nextLong();
+		Conta produto = produtoMediator.buscar(codigo);
+		if (produto == null) {
+			System.out.println(CONTA_NAO_ENCONTRADA);
+			return NUMERO_DESCONHECIDO;
+		} else {
+			System.out.println("C�digo: " + produto.getCodigo());
+			System.out.println("Nome: " + produto.getNome());
+			System.out.println("Pre�o: " + produto.getPreco());
+			System.out.println("Tipo: " + produto.getTipo().getDescricao());
+			return codigo;
+		}
+	}
+	
+	private void processaExclusao(long codigo) {
+		boolean retornoRepositorio = produtoMediator.excluir(codigo);
+		if (retornoRepositorio) {
+			System.out.println("Produto excluido com sucesso!");
+		} else {
+			System.out.println(CONTA_NAO_ENCONTRADA);
+		}
+	}
+	
+	private Conta capturaProduto(long codigoDaAlteracao) {
+		long numero; 
+		if (codigoDaAlteracao == NUMERO_DESCONHECIDO) {
+			System.out.print(DIGITE_O_NUMERO);
+			numero = SC.nextLong();			
+		} else {
+			numero = codigoDaAlteracao;
+		}
+		System.out.print("Digite o status da conta (1, 2 ou 3): ");
+		int statusContaCodigo = SC.nextInt();
+		StatusConta status = StatusConta.obterPorCodigo(statusContaCodigo);
+		LocalDate dataAbertura = null;
+		int dia, mes, ano;
+		System.out.println("Digite o dia: ");
+		dia = SC.nextInt();
+		System.out.println("Digite o mes: ");
+		mes = SC.nextInt();
+		System.out.println("Digite o ano: ");
+		ano = SC.nextInt();
+		
+		if (verificarValoresDatas(dia, mes, ano)) {
+			YearMonth mesInformado = YearMonth.of(ano, mes);
+			int qtdDiasNoMes = mesInformado.lengthOfMonth();
+			if (dia <= qtdDiasNoMes) {
+				dataAbertura = LocalDate.of(ano, mes, dia);
+			}
+		}
+		return new Conta(numero, status, dataAbertura);
+	}
+	
+	private boolean verificarValoresDatas(int dia, int mes, int ano) {
+		if (dia <= 0) {
+			return false;
+		}
+		else if (mes > 12 || mes < 0) {
+			return false;
+		} else if(ano < 0) {
+			return false;
+		}
+		return true;
+	}
+}
