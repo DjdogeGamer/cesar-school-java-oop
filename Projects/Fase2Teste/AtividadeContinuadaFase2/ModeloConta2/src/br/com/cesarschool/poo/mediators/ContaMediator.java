@@ -110,13 +110,12 @@ public class ContaMediator {
 		LocalDate hoje = LocalDate.now();
 		LocalDate dataLimite = hoje.minusMonths(1);
 		
-		if (!dataConta.equals(hoje)) {
+		if (dataConta.equals(hoje)) {
 			return true;
 		}
-		else if (!dataConta.isAfter(dataLimite) && dataConta.isBefore(hoje)) {
+		else if (dataConta.isAfter(dataLimite) && dataConta.isBefore(hoje)) {
 			return true;
-		}
-		
+		}		
 		return false;
 	}
 	private boolean numeroTamanhoValido(Conta conta) {
