@@ -1,0 +1,132 @@
+package br.com.cesarschool.poo.telas;
+
+import java.util.Scanner;
+
+import br.com.cesarschool.poo.entidades.Produto;
+import br.com.cesarschool.poo.entidades.TipoProduto;
+import br.com.cesarschool.poo.mediators.ProdutoMediator;
+import br.com.cesarschool.poo.mediators.StatusValidacaoProduto;
+
+
+/**
+ * @author Vitor Carvalho
+ * 
+ */
+public class TelaProduto {
+	
+	private static final String DIGITE_O_NUMERO = "Digite o numero: ";
+	private static final String PRODUTO_NAO_ENCONTRADO = "Produto nao encontrado!";
+	private static final int CODIGO_DESCONHECIDO = -1;
+	private static final Scanner ENTRADA = new Scanner(System.in);
+	private ProdutoMediator produtoMediator = new ProdutoMediator(); 
+	
+	public void executaTela() {
+		while(true) {
+			long codigo = CODIGO_DESCONHECIDO;
+			imprimeMenuPrincipal();
+			int opcao = ENTRADA.nextInt();
+			if (opcao == 1) {
+				processaInclusao();
+			} else if (opcao == 2) {
+				codigo = processaBusca();
+				if (codigo != CODIGO_DESCONHECIDO) {
+					processaAlteracao(codigo);
+				} 
+			} else if (opcao == 3) {
+				codigo = processaBusca();
+				if (codigo != CODIGO_DESCONHECIDO) {
+					processaExclusao(codigo);
+				}			
+			} else if (opcao == 4) {
+				processaBusca();
+			} else if (opcao == 5) {
+				System.out.println("Saindo do cadastro de produtos");
+				System.exit(0);
+			} else {
+				System.out.println("Op��o inv�lida!!");
+			}
+		} 
+	}
+	
+	private void imprimeMenuPrincipal() {		
+		System.out.println("1- Incluir");
+		System.out.println("2- Alterar");
+		System.out.println("3- Excluir");
+		System.out.println("4- Buscar");
+		System.out.println("5- Sair");
+		System.out.print("Digite a op��o: ");
+	}
+	
+	private void processaMensagensErroValidacao(StatusValidacaoProduto status) {
+		String[] mensagensErro = status.getMensagens();
+		System.out.println("Problemas ao incuir/alterar produto:");
+		for (String mensagemErro : mensagensErro) {
+			if (mensagemErro != null) {
+				System.out.println(mensagemErro);
+			} 
+		}
+	}
+	
+	private void processaInclusao() {
+		Produto produto = capturaProduto(CODIGO_DESCONHECIDO);
+		StatusValidacaoProduto status = produtoMediator.incluir(produto);
+		if (status.isValido()) { 
+			System.out.println("Produto inclu�do com sucesso!");
+		} else {
+			processaMensagensErroValidacao(status);			
+		}
+	}
+	
+	private void processaAlteracao(long codigo) {
+		Produto produto = capturaProduto(codigo);
+		StatusValidacaoProduto status = produtoMediator.alterar(produto);
+		if (status.isValido()) { 
+			System.out.println("Produto alterado com sucesso!");
+		} else {
+			processaMensagensErroValidacao(status);		
+		}
+	}
+	
+	private long processaBusca() {
+		System.out.print(DIGITE_O_CODIGO);
+		long codigo = ENTRADA.nextLong();
+		Produto produto = produtoMediator.buscar(codigo);
+		if (produto == null) {
+			System.out.println(PRODUTO_NAO_ENCONTRADO);
+			return CODIGO_DESCONHECIDO;
+		} else {
+			System.out.println("C�digo: " + produto.getCodigo());
+			System.out.println("Nome: " + produto.getNome());
+			System.out.println("Pre�o: " + produto.getPreco());
+			System.out.println("Tipo: " + produto.getTipo().getDescricao());
+			return codigo;
+		}
+	}
+	
+	private void processaExclusao(long codigo) {
+		boolean retornoRepositorio = produtoMediator.excluir(codigo);
+		if (retornoRepositorio) {
+			System.out.println("Produto exclu�do com sucesso!");
+		} else {
+			System.out.println(PRODUTO_NAO_ENCONTRADO);
+		}
+	}
+	
+	private Produto capturaProduto(long codigoDaAlteracao) {
+		long codigo; 
+		if (codigoDaAlteracao == CODIGO_DESCONHECIDO) {
+			System.out.print(DIGITE_O_CODIGO);
+			codigo = ENTRADA.nextLong();			
+		} else {
+			codigo = codigoDaAlteracao;
+		}
+		System.out.print("Digite o nome: ");
+		String nome = ENTRADA.next();
+		System.out.print("Digite o pre�o: ");
+		double preco = ENTRADA.nextDouble();
+		System.out.print("Digite o status da conta (1, 2 ou 3): ");
+		int codigoTipo = ENTRADA.nextInt();
+		TipoProduto tipo = TipoProduto.obterPorCodigo(codigoTipo);
+		return new Produto(codigo, nome, preco, tipo);
+	}
+}

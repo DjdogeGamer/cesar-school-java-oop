@@ -1,0 +1,8 @@
+1665911056288	Rename type 'StatusValidacaoProduto'
+1665911067380	Rename type 'ProdutoMediator'
+1665912661445	Rename local variable 'produto'
+1665912895005	Rename local variable 'produto'
+1665912903653	Rename method 'capturaProduto'
+1665913057334	Rename field 'MENSAGEM_PRODUTO_NAO_ENCONTRADO'
+1665913514528	Move compilation unit
+1665914603816	Rename type 'OperacoesAlterarMediator'

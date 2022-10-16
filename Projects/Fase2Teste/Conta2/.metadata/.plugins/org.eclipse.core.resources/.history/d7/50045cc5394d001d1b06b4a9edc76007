@@ -1,0 +1,33 @@
+package br.com.cesarschool.poo.repositorios;
+
+public enum OperacoesAlterarMediator {
+	ALTERAR_DATA(1, "DATA"), 
+	ENCERRAR(2, "ENCERRAR"), 
+	BLOQUEAR(3, "BLOQUEAR"),
+	ATIVAR(4, "ATIVAR");
+	
+	private OperacoesAlterarMediator(int codigo, String descricao) {
+		this.codigo = codigo;
+		this.descricao = descricao;
+	}
+	
+	private int codigo;
+	private String descricao;
+	
+	public int getCodigo() {
+		return codigo;
+	}
+	
+	public String getDescricao() {
+		return descricao;
+	}
+	
+	public static OperacoesAlterarMediator obterPorCodigo(int codigo) {
+		for (OperacoesAlterarMediator operacao : OperacoesAlterarMediator.values()) {
+			if (operacao.getCodigo() == codigo) {
+				return operacao;
+			}
+		}
+	return null;
+	}
+}

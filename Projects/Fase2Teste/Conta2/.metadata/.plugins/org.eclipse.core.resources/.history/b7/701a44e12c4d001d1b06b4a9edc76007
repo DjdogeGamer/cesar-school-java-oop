@@ -1,0 +1,5 @@
+package br.com.cesarschool.poo.entidades;
+
+public enum StatusConta {
+	INDISPONIVEL, ATIVA, BLOQUEADA, ENCERRADA
+}

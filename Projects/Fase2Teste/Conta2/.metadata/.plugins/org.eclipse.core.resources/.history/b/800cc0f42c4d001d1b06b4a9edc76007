@@ -1,0 +1,33 @@
+package br.com.cesarschool.poo.entidades;
+
+public enum StatusConta {
+	INDISPONIVEL, ATIVA, BLOQUEADA, ENCERRADA
+	ATIVA(1, "Ativa"), 
+	BLOQUEADA(2, "Bloqueada"), 
+	ENCERRADA(3, "Encerrada");
+	
+	private EscoreConta(int codigo, String descricao) {
+		this.codigo = codigo;
+		this.descricao = descricao;
+	}
+	
+	private int codigo;
+	private String descricao;
+	
+	public int getCodigo() {
+		return codigo;
+	}
+	
+	public String getDescricao() {
+		return descricao;
+	}
+	
+	public static EscoreConta obterPorCodigo(int codigo) {
+		for (EscoreConta escoreConta : EscoreConta.values()) {
+			if (escoreConta.getCodigo() == codigo) {
+				return escoreConta;
+			}
+		}
+	return null;
+	}
+}
