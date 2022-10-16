@@ -10,6 +10,12 @@ import br.com.cesarschool.poo.telas.OperacoesTelaConta;
 import br.com.cesarschool.poo.telas.TratarEntrada;
 
 public class ContaMediator {
+	
+	private static final int SUCESSO = 0;
+	private static final int VALOR_NEGATIVO = -1;
+	private static final int CONTA_ENCERRADA = -2;
+	private static final int CONTA_BLOQUEADA = -3;
+	
 	private RepositorioConta repositorioConta = RepositorioConta.getInstancia();
 	
 	public void incluir() {
@@ -80,19 +86,6 @@ public class ContaMediator {
 		Imprimir.conta(conta);
 	}
 	
-	public void creditar(Conta conta, double valor) {
-		if (conta.creditar(valor) == 0) {
-			System.out.println("Novo saldo: " + conta.getSaldo());
-		
-		}
-	}
-	
-	public void debitar(Conta conta, double valor) {
-		if (conta.debitar(valor) == 0) {
-			System.out.println("Novo saldo: " + conta.getSaldo());
-		}
-	}
-	
 	public void alterarStatus(StatusConta status) {
 		long numero = TratarEntrada.pegarNumero();
 		Conta aux = repositorioConta.retornarConta(numero);
@@ -148,6 +141,37 @@ public class ContaMediator {
 			printarMudanca(anterior, conta);
 		}
 	}
+	
+	public int creditar(Conta conta, double valorCreditado) {
+		if (valorCreditado < 0.0) {
+			System.out.println("O valor informado de " + valorCreditado + " é negativo. Abortando operação...");
+			return VALOR_NEGATIVO;
+		}
+		else if (conta.getStatus() == StatusConta.ENCERRADA) {
+			System.out.println("A conta " + conta.getNumero() + " foi encerrada. Abortando operação...");
+			return CONTA_ENCERRADA;
+		}
+		double antigoSaldo = conta.getSaldo();
+		double novoSaldo = antigoSaldo += valorCreditado;
+		conta.setSaldo(novoSaldo);
+		return SUCESSO;
+	}
+	
+	public int debitar(Conta conta, double valorDebitado) {
+		if (valorDebitado < 0.0) {
+			System.out.println("O valor informado de " + valorDebitado + " é negativo. Abortando operação...");
+			return VALOR_NEGATIVO;
+		}
+		else if (conta.getStatus() == StatusConta.BLOQUEADA) {
+			System.out.println("A conta " + conta.getNumero() + " foi bloqueada. Abortando operação...");
+			return CONTA_BLOQUEADA;
+		}
+		double antigoSaldo = conta.getSaldo();
+		double novoSaldo = antigoSaldo -= valorDebitado;
+		conta.setSaldo(novoSaldo);
+		return SUCESSO;
+	}
+
 	
 	public void printarMudanca(StatusConta anterior, Conta conta) {
 		System.out.println("O status da conta " + conta.getNumero() + " foi alterado");

@@ -4,10 +4,6 @@ import java.time.LocalDate;
 
 public class Conta {
 	//Erros de funcao
-	private static final int SUCESSO = 0;
-	private static final int VALOR_NEGATIVO = -1;
-	private static final int CONTA_ENCERRADA = -2;
-	private static final int CONTA_BLOQUEADA = -3;
 	
 	private long numero; // Deve ser maior do que zero e é único para cada conta
 	private StatusConta status;
@@ -40,33 +36,10 @@ public class Conta {
 	public double getSaldo() {
 		return saldo;
 	}
-	
-	public int creditar(double valorCreditado) {
-		if (valorCreditado < 0.0) {
-			System.out.println("O valor informado de " + valorCreditado + " é negativo. Abortando operação...");
-			return VALOR_NEGATIVO;
-		}
-		else if (status == StatusConta.ENCERRADA) {
-			System.out.println("A conta " + numero + " foi encerrada. Abortando operação...");
-			return CONTA_ENCERRADA;
-		}
-		saldo += valorCreditado;
-		return SUCESSO;
+	public void setSaldo(double saldo) {
+		this.saldo = saldo;
 	}
 	
-	public int debitar(double valorDebitado) {
-		if (valorDebitado < 0.0) {
-			System.out.println("O valor informado de " + valorDebitado + " é negativo. Abortando operação...");
-			return VALOR_NEGATIVO;
-		}
-		else if (status == StatusConta.BLOQUEADA) {
-			System.out.println("A conta " + numero + " foi bloqueada. Abortando operação...");
-			return CONTA_BLOQUEADA;
-		}
-		saldo -= valorDebitado;
-		return SUCESSO;
-	}
-
 	public EscoreConta calcularEscore() {
 		double valor = 0;
 		if (status == StatusConta.BLOQUEADA) {
