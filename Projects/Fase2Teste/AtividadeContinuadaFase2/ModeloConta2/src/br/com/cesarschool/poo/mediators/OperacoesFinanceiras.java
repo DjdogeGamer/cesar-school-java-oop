@@ -1,5 +1,5 @@
 package br.com.cesarschool.poo.mediators;
 
-public enum Operacoes {
+public enum OperacoesFinanceiras {
 	CREDITAR, DEBITAR
 }

@@ -2,68 +2,51 @@ package br.com.cesarschool.poo.entidades;
 
 import java.time.LocalDate;
 
-import br.com.cesarschool.poo.telas.Escore;
-
 public class Conta {
 	//Erros de funcao
 	
 	private long numero; // Deve ser maior do que zero e é único para cada conta
-	private Status status;
+	private StatusConta status;
 	private LocalDate dataAbertura; // Deve ser menor ou igual à data atual e maior do que a data atual -1 mes
 	private double saldo = 0.0; // É inicializado com 0
-	private TipoConta tipoConta; 
 	
-	public Conta(long numero, Status status, LocalDate dataAbertura, TipoConta tipoConta) {
+	public Conta(long numero, StatusConta status, LocalDate dataAbertura) {
+		super();
 		this.numero = numero;
 		this.status = status;
 		this.dataAbertura = dataAbertura;
-		this.tipoConta = tipoConta;
 	}
 	
 	// Getters and Setters
-	public Status getStatus() {
+	public StatusConta getStatus() {
 		return status;
 	}
-	
-	public void setStatus(Status status) {
+	public void setStatus(StatusConta status) {
 		this.status = status;
 	}
-	
 	public long getNumero() {
 		return numero;
 	}
-	
-	public void setSaldo(double saldo) {
-		this.saldo = saldo;
-	}
-
 	public LocalDate getDataAbertura() {
 		return dataAbertura;
 	}
-	
 	public void setDataAbertura(LocalDate dataAbertura) {
 		this.dataAbertura = dataAbertura;
 	}
-	
 	public double getSaldo() {
 		return saldo;
 	}
-	
-	public TipoConta getTipoConta() {
-		return tipoConta;
+	public void setSaldo(double saldo) {
+		this.saldo = saldo;
 	}
 	
-	public void setTipoConta(TipoConta tipoConta) {
-		this.tipoConta = tipoConta;
-	}
-
-	public Escore calcularEscore() {
+	public EscoreConta calcularEscore() {
 		double valor = 0;
-		if (status == Status.BLOQUEADA) {
+		if (status == StatusConta.BLOQUEADA) {
 			System.out.println("A conta está bloqueada");
-			return Escore.INDISPONIVEL;
+			return EscoreConta.INDISPONIVEL;
 		}
-		else if (status == Status.ENCERRADA) {
+		else if (status == StatusConta.ENCERRADA) {
 			valor = 0; 
 		} else {
 			LocalDate hoje = LocalDate.now();
@@ -73,17 +56,17 @@ public class Conta {
 		return selecionarEscore(valor);
 	}
 	
-	public Escore selecionarEscore(double valor) {
+	public EscoreConta selecionarEscore(double valor) {
 		if (valor < 5800) {
-			return Escore.BRONZE;
+			return EscoreConta.BRONZE;
 		}
 		else if (valor >= 5800 && valor <= 13000) {
-			return Escore.PRATA;
+			return EscoreConta.PRATA;
 		}
 		else if (valor >= 13001 && valor <= 39000) {
-			return Escore.OURO;
+			return EscoreConta.OURO;
 		}
-		return Escore.DIAMANTE;
+		return EscoreConta.DIAMANTE;
 	}
 	
 }

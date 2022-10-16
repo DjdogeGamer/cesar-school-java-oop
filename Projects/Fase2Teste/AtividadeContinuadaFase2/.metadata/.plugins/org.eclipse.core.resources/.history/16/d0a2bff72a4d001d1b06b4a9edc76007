@@ -2,7 +2,12 @@ package br.com.cesarschool.poo.repositorios;
 
 import br.com.cesarschool.poo.entidades.Conta;
 
-
+/**
+ * @author An�nimo
+ *
+ * Implementa��o prim�ria para efeito did�tico.
+ * Ser� melhorada!!!
+ */
 public class RepositorioConta {
 
 	private static final int MAX_CONTAS = 1000;
@@ -26,35 +31,35 @@ public class RepositorioConta {
 	public boolean incluir(Conta conta) {
 		if (buscarIndice(conta.getNumero()) != -1) {
 			return false;
-		} else if (tamanho == MAX_CONTAS - 1) {
+		} else if (tamanhoAtual == TAMANHO_MAX_PRODUTOS - 1) {
 			return false;
 		} else {
-			for (int i = 0; i < vetorContas.length; i++) {
-				if (vetorContas[i] == null) {
-					vetorContas[i] = conta; 
+			for (int i = 0; i < cadastroProduto.length; i++) {
+				if (cadastroProduto[i] == null) {
+					cadastroProduto[i] = produto; 
 					break;
 				}
 			}
-			tamanho++; 
+			tamanhoAtual++; 
 			return true; 
 		}
 	}
-	public boolean alterar(Conta conta) {
-		int indice = buscarIndice(conta.getNumero()); 
+	public boolean alterar(Produto produto) {
+		int indice = buscarIndice(produto.getCodigo()); 
 		if (indice == -1) {
 			return false;
 		} else {
-			vetorContas[indice] = conta;
+			cadastroProduto[indice] = produto;
 			return true; 
 		}
 	}
 	
-	public Conta retornarConta(long codigo) {
+	public Produto buscar(long codigo) {
 		int indice = buscarIndice(codigo);
 		if (indice == -1) {
 			return null;
 		} else {
-			return vetorContas[indice];
+			return cadastroProduto[indice];
 		}
 	}
 	
@@ -63,13 +68,13 @@ public class RepositorioConta {
 		if (indice == -1) {
 			return false;
 		} else {
-			vetorContas[indice] = null;
-			tamanho--;
+			cadastroProduto[indice] = null;
+			tamanhoAtual--;
 			return true;
 		}		
 	}
 	
-	public int buscarIndice(long numero) {		
+	private int buscarIndice(long numero) {		
 		for (int i = 0; i < vetorContas.length; i++) {
 			if (vetorContas[i] != null && vetorContas[i].getNumero() == numero) {
 				return i; 				

@@ -1,0 +1,101 @@
+package br.com.cesarschool.poo.mediators;
+
+import java.time.LocalDate;
+
+import br.com.cesarschool.poo.entidades.Conta;
+import br.com.cesarschool.poo.repositorios.RepositorioConta;
+
+public class ProdutoMediator {
+	
+	private RepositorioConta repositorioProduto = RepositorioConta.getInstancia();
+
+	private static final String MENSAGEM_STATUS_INVALIDO = "Status informado e invalido";
+	private static final String MENSAGEM_DATA_INVALIDA = "Data informada e invalida";
+	private static final String MENSAGEM_NUMERO_INVALIDO = "Numero informado e invalido";
+	private static final String MENSAGEM_NUMERO_CONTA_EXISTENTE = "Numero informado ja esta em uso por outra conta";
+	private static final String MENSAGEM_PRODUTO_NAO_ENCONTRADO = "A conta informada nao pode ser encontrada";
+	private static final String MENSAGEM_CONTA_NAO_INFORMADA = "A conta nao foi informada";
+	
+	public StatusValidacaoProduto incluir(Conta conta) {
+		StatusValidacaoProduto status = validar(conta);
+		if (status.isValido()) {
+			boolean retornoRepositorio = repositorioProduto.incluir(conta);
+			if (!retornoRepositorio) {
+				status.getCodigosErros()[0] = StatusValidacaoProduto.NUMERO_CONTA_EXISTENTE;
+				status.getMensagens()[0] = MENSAGEM_NUMERO_CONTA_EXISTENTE;
+				status.setValido(false);
+			}
+		}				
+		return status;
+	}
+	public StatusValidacaoProduto alterar(Conta conta) {
+		StatusValidacaoProduto status = validar(conta);
+		if (status.isValido()) {
+			boolean retornoRepositorio = repositorioProduto.alterar(conta);
+			if (!retornoRepositorio) {
+				status.getCodigosErros()[0] = StatusValidacaoProduto.CONTA_NAO_ENCONTRADA;
+				status.getMensagens()[0] = MENSAGEM_PRODUTO_NAO_ENCONTRADO;
+				status.setValido(false);
+			}
+		}				
+		return status;
+	}	
+	public boolean excluir(long codigo) {
+		return repositorioProduto.excluir(codigo);
+	}	
+	public Conta buscar(long numero) {
+		return repositorioProduto.retornarConta(numero);
+	}
+	
+	private StatusValidacaoProduto validar(Conta conta) {
+		int[] codigoStatus = new int[StatusValidacaoProduto.QTD_SITUACOES_EXCECAO]; 
+		String[] mensagensStatus = new String[StatusValidacaoProduto.QTD_SITUACOES_EXCECAO];
+		int contErros = 0;
+		if (conta == null) {
+			codigoStatus[contErros++] = StatusValidacaoProduto.CONTA_NAO_INFORMADA;
+			mensagensStatus[contErros] = MENSAGEM_CONTA_NAO_INFORMADA;			
+		} else {
+			if (!statusValido(conta)) {
+				codigoStatus[contErros++] = StatusValidacaoProduto.STATUS_INVALIDO;
+				mensagensStatus[contErros] = MENSAGEM_STATUS_INVALIDO;
+			}
+			if(!dataValida(conta)) {
+				codigoStatus[contErros++] = StatusValidacaoProduto.DATA_INVALIDA;
+				mensagensStatus[contErros] = MENSAGEM_DATA_INVALIDA;
+			}
+			if (!numeroTamanhoValido(conta)) {
+				codigoStatus[contErros++] = StatusValidacaoProduto.NUMERO_INVALIDO;
+				mensagensStatus[contErros] = MENSAGEM_NUMERO_INVALIDO;								
+			}
+		}		
+		return new StatusValidacaoProduto(codigoStatus, mensagensStatus, contErros == 0);		
+	}	
+	
+	private boolean statusValido(Conta conta) {
+		if (conta.getStatus() == null) {
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean dataValida(Conta conta) {
+		LocalDate dataConta = conta.getDataAbertura();
+		LocalDate hoje = LocalDate.now();
+		LocalDate dataLimite = hoje.minusMonths(1);
+		
+		if (dataConta.equals(hoje)) {
+			return false;
+		}
+		else if (dataConta.isAfter(dataLimite) && dataConta.isBefore(hoje)) {
+			return false;
+		}
+		
+		return true;
+	}
+	private boolean numeroTamanhoValido(Conta conta) {
+		if (conta.getNumero() <= 0) {
+			return false;
+		}
+		return true;
+	}
+}
