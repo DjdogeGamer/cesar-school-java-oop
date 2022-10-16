@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import br.com.cesarschool.poo.entidades.Conta;
 import br.com.cesarschool.poo.entidades.StatusConta;
-import br.com.cesarschool.poo.repositorios.OperacoesAlterar;
 import br.com.cesarschool.poo.repositorios.RepositorioConta;
 
 public class ContaMediator {

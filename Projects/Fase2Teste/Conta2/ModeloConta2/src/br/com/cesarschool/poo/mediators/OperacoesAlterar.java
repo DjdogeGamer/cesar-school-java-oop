@@ -1,4 +1,4 @@
-package br.com.cesarschool.poo.repositorios;
+package br.com.cesarschool.poo.mediators;
 
 public enum OperacoesAlterar {
 	ALTERAR_DATA(1, "DATA"), 

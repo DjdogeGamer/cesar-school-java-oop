@@ -2,12 +2,7 @@ package br.com.cesarschool.poo.repositorios;
 
 import br.com.cesarschool.poo.entidades.Conta;
 
-/**
- * @author An�nimo
- *
- * Implementa��o prim�ria para efeito did�tico.
- * Ser� melhorada!!!
- */
+
 public class RepositorioConta {
 
 	private static final int MAX_CONTAS = 1000;

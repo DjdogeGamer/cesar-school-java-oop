@@ -8,14 +8,11 @@ import java.util.Scanner;
 import br.com.cesarschool.poo.entidades.Conta;
 import br.com.cesarschool.poo.entidades.StatusConta;
 import br.com.cesarschool.poo.mediators.ContaMediator;
+import br.com.cesarschool.poo.mediators.OperacoesAlterar;
+import br.com.cesarschool.poo.mediators.OperacoesFinanceiras;
 import br.com.cesarschool.poo.mediators.StatusValidacaoConta;
-import br.com.cesarschool.poo.repositorios.OperacoesAlterar;
 
 
-/**
- * 
- * 
- */
 public class TelaConta {
 	
 	private static final String DIGITE_O_NUMERO = "Digite o numero: ";
@@ -32,7 +29,7 @@ public class TelaConta {
 			int opcao = SC.nextInt();
 			if (opcao == 1) {
 				processaInclusao();
-			} else if (opcao >= 2 && opcao <= 9) {
+			} else if (opcao >= 2 && opcao <= 5) {
 				numero = processaBusca();
 				if (numero != NUMERO_DESCONHECIDO) {
 					OperacoesAlterar operacao = OperacoesAlterar.obterPorCodigo(opcao-1);
@@ -45,16 +42,29 @@ public class TelaConta {
 				}			
 			} else if (opcao == 7) {
 				processaBusca();
+			} else if (opcao == 8) {
+				numero = processaBusca();
+				if (numero != NUMERO_DESCONHECIDO) {
+					OperacoesAlterar operacao = OperacoesAlterar.obterPorCodigo(5);
+					processaAlteracao(numero, operacao);
+				} 
+			} else if (opcao == 9) {
+				numero = processaBusca();
+				if (numero != NUMERO_DESCONHECIDO) {
+					OperacoesAlterar operacao = OperacoesAlterar.obterPorCodigo(6);
+					processaAlteracao(numero, operacao);
+				} 
 			} else if (opcao == 10) {
-				System.out.println("Saindo do cadastro de produtos");
+				System.out.println("Saindo... ");
 				System.exit(0);
 			} else {
 				System.out.println("Opcao invalida!!");
 			}
 		} 
 	}
-	
+
 	private void imprimeMenuPrincipal() {		
+		System.out.println();		
 		System.out.println("1- Incluir");
 		System.out.println("2- Alterar");
 		System.out.println("3- Encerrar");
@@ -70,7 +80,7 @@ public class TelaConta {
 	
 	private void processaMensagensErroValidacao(StatusValidacaoConta status) {
 		String[] mensagensErro = status.getMensagens();
-		System.out.println("Problemas ao incuir/alterar produto:");
+		System.out.println("Problemas ao incuir/alterar Conta:");
 		for (String mensagemErro : mensagensErro) {
 			if (mensagemErro != null) {
 				System.out.println(mensagemErro);
@@ -82,7 +92,7 @@ public class TelaConta {
 		Conta conta = capturaConta(NUMERO_DESCONHECIDO);
 		StatusValidacaoConta status = contaMediator.incluir(conta);
 		if (status.isValido()) { 
-			System.out.println("Produto inclu�do com sucesso!");
+			System.out.println("Conta incluida com sucesso!");
 		} else {
 			processaMensagensErroValidacao(status);			
 		}
@@ -102,6 +112,7 @@ public class TelaConta {
 				return -1;
 			}
 			alterada = new Conta(conta.getNumero(), conta.getStatus(), novaDataAbertura);
+			imprimirConta(alterada);
 		} else if (operacao == OperacoesAlterar.ENCERRAR) {
 			if (conta.getStatus() != StatusConta.ENCERRADA) {
 				alterada = contaMediator.mudarParaStatus(conta, StatusConta.ENCERRADA);
@@ -125,12 +136,15 @@ public class TelaConta {
 				alterada = contaMediator.mudarParaStatus(conta, StatusConta.ATIVA);
 			}
 		} else if (operacao == OperacoesAlterar.CREDITAR || operacao == OperacoesAlterar.DEBITAR) {
+			System.out.printf("Informe valor creditado: ");
 			double valor = SC.nextDouble();
 			if (valor < 0) {
 				System.out.println("Erro, valor negativo");
 				return -1;
 			}
 			alterada = contaMediator.mudarSaldo(conta, operacao, valor);
+			System.out.println();
+			imprimirConta(alterada);
 		}
 		
 		StatusValidacaoConta status = contaMediator.alterar(alterada);
@@ -157,7 +171,7 @@ public class TelaConta {
 	
 	private void imprimirConta(Conta conta) {
 		System.out.println("Numero da Conta: " + conta.getNumero());
-		System.out.println("Saldo: " + conta.getSaldo());
+		System.out.printf("Saldo: R$%,.2f\n", conta.getSaldo());
 		System.out.println("Escore: " + conta.calcularEscore());
 		System.out.println("Status: " + conta.getStatus());
 		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -168,7 +182,7 @@ public class TelaConta {
 	private void processaExclusao(long codigo) {
 		boolean retornoRepositorio = contaMediator.excluir(codigo);
 		if (retornoRepositorio) {
-			System.out.println("Produto excluido com sucesso!");
+			System.out.println("Conta excluida com sucesso!");
 		} else {
 			System.out.println(CONTA_NAO_ENCONTRADA);
 		}
