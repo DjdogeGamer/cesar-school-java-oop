@@ -108,7 +108,8 @@ public class ContaMediator {
 	private boolean dataValida(Conta conta) {
 		LocalDate dataConta = conta.getDataAbertura();
 		LocalDate hoje = LocalDate.now();
-		LocalDate dataLimite = hoje.minusMonths(1);
+		LocalDate dataLimite = hoje.minusDays(1).minusMonths(1);
+		//System.out.println("Data Limite: "+ dataLimite);
 		
 		if (dataConta.equals(hoje)) {
 			return true;

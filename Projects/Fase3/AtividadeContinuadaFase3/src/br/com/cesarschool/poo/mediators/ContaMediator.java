@@ -11,8 +11,8 @@ public class ContaMediator {
 	private RepositorioConta repositorioConta = RepositorioConta.getInstancia();
 
 	private static final String MENSAGEM_STATUS_INVALIDO = "Status informado e invalido";
-	private static final String MENSAGEM_DATA_FALSA = "Data informada e falsa";
-	private static final String MENSAGEM_DATA_INVALIDA = "Data informada e invalida";
+	private static final String MENSAGEM_DATA_FALSA = "Data informada falsa";
+	private static final String MENSAGEM_DATA_INVALIDA = "Data informada invalida";
 	private static final String MENSAGEM_NUMERO_INVALIDO = "Numero informado e invalido";
 	private static final String MENSAGEM_NUMERO_CONTA_EXISTENTE = "Numero informado ja esta em uso por outra conta";
 	//private static final String MENSAGEM_CONTA_NAO_ENCONTRADA = "A conta informada nao pode ser encontrada";
@@ -108,8 +108,8 @@ public class ContaMediator {
 	private boolean dataValida(Conta conta) {
 		LocalDate dataConta = conta.getDataAbertura();
 		LocalDate hoje = LocalDate.now();
-		LocalDate dataLimite = hoje.minusMonths(1);
-		
+		LocalDate dataLimite = hoje.minusDays(1).minusMonths(1);
+	
 		if (dataConta.equals(hoje)) {
 			return true;
 		}
