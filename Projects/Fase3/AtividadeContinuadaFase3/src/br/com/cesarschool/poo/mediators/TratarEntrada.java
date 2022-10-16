@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 import br.com.cesarschool.poo.entidades.Status;
+import br.com.cesarschool.poo.entidades.TipoConta;
 
 public class TratarEntrada {
 	private static final Scanner SC = new Scanner(System.in);
@@ -38,6 +39,27 @@ public class TratarEntrada {
 			}
 		} while (valor <= 0);
 		return valor;
+	}
+	
+	public static TipoConta pegarTipoConta() {
+		int numeroConta = -1;
+		TipoConta tipo = null;
+		do {
+			System.out.print("Informe o status: ");
+			numeroConta = SC.nextInt();
+			switch (numeroConta) {
+				case 1:
+					tipo = TipoConta.CORRENTISTA;
+					break;
+				case 2: 
+					tipo = TipoConta.POUPANCA;
+					break;
+				default:
+					System.out.println("Tipo de Conta desconhecido");
+					break;
+			}
+		} while (numeroConta < 1 || numeroConta > Status.values().length);
+		return tipo;
 	}
 	
 	public static LocalDate pegarData() {
@@ -91,5 +113,20 @@ public class TratarEntrada {
 			}
 		} while (numeroStatus < 1 || numeroStatus > Status.values().length);
 		return status;
+	}
+	
+	public static String pegarNome() {
+		String nome = SC.nextLine();
+		return nome;
+	}
+	
+	public static String pegarCPF() {
+		int isValid;
+		String CPF;
+		do {
+			CPF = SC.nextLine();
+			isValid = CorrentistaMediador.validaCPF(CPF);
+		} while (isValid != -3);
+		return CPF;
 	}
 }

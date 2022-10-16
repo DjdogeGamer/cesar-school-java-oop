@@ -4,7 +4,9 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 import br.com.cesarschool.poo.entidades.Conta;
+import br.com.cesarschool.poo.entidades.Correntista;
 import br.com.cesarschool.poo.entidades.Status;
+import br.com.cesarschool.poo.entidades.TipoConta;
 import br.com.cesarschool.poo.mediators.ContaMediator;
 import br.com.cesarschool.poo.mediators.Operacoes;
 import br.com.cesarschool.poo.mediators.TratarEntrada;
@@ -12,6 +14,7 @@ import br.com.cesarschool.poo.repositorios.RepositorioConta;
 
 public class TelaConta {
 	private RepositorioConta repositorio = RepositorioConta.getInstance();
+	
 	private static final Scanner SC = new Scanner(System.in);
 	
 	public void executarTela() {
@@ -77,7 +80,16 @@ public class TelaConta {
 		}
 		Status statusSelecionado = TratarEntrada.pegarStatus();
 		LocalDate data = TratarEntrada.pegarData();
-		return new Conta(posicao, statusSelecionado, data);
+		TipoConta tipoConta = TratarEntrada.pegarTipoConta();
+		
+		
+		if (tipoConta == TipoConta.CORRENTISTA) {
+			String nome = TratarEntrada.pegarNome();
+			String cpf = TratarEntrada.pegarCPF();
+			return new Correntista(nome, cpf, posicao, statusSelecionado, data, tipoConta);
+		}
+		
+		return new Conta(posicao, statusSelecionado, data, tipoConta);
 	}
 	
 	public void alterar() {

@@ -1,6 +1,5 @@
 package br.com.cesarschool.poo.repositorios;
 
-import br.com.cesarschool.poo.entidades.Conta;
 import br.com.cesarschool.poo.entidades.Correntista;
 
 public class RepositorioCorrentista {

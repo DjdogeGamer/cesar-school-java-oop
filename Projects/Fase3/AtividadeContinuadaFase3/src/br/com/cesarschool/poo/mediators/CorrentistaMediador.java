@@ -12,8 +12,7 @@ public class CorrentistaMediador {
 	private static final int CORRENTISTA_INVALIDO = -2;
 	private static final int CPF_INVALIDO = -3;
 	
-	
-	private RepositorioCorrentista repositorioCorrentista = RepositorioCorrentista.getInstance();
+	private static RepositorioCorrentista repositorioCorrentista = RepositorioCorrentista.getInstance();
 	
 	public int incluir(Correntista correntista) {
 		return repositorioCorrentista.incluir(correntista);
@@ -28,7 +27,7 @@ public class CorrentistaMediador {
 		return repositorioCorrentista.excluir(cpf);
 	}
 	
-	public int validar(Correntista correntista) {
+	public static int validar(Correntista correntista) { 
 		if(correntista == null) {
 			return CORRENTISTA_NAO_EXISTE;
 		} else {
@@ -43,7 +42,9 @@ public class CorrentistaMediador {
 		return SUCESSO;
 	}
 	
-    public int validaCPF(String CPF) {
+	// (procurar algoritmo na Internet e colocar no projeto).
+	// Fonte: DevMedia 
+    public static int validaCPF(String CPF) {
 		// considera-se erro CPF's formados por uma sequencia de numeros iguais
 		if (CPF.equals("00000000000") ||
 		    CPF.equals("11111111111") ||

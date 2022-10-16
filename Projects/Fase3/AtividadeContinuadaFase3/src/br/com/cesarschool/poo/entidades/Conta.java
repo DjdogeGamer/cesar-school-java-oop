@@ -11,21 +11,24 @@ public class Conta {
 	private Status status;
 	private LocalDate dataAbertura; // Deve ser menor ou igual à data atual e maior do que a data atual -1 mes
 	private double saldo = 0.0; // É inicializado com 0
+	private TipoConta tipoConta; 
 	
-	public Conta(long numero, Status status, LocalDate dataAbertura) {
-		super();
+	public Conta(long numero, Status status, LocalDate dataAbertura, TipoConta tipoConta) {
 		this.numero = numero;
 		this.status = status;
 		this.dataAbertura = dataAbertura;
+		this.tipoConta = tipoConta;
 	}
 	
 	// Getters and Setters
 	public Status getStatus() {
 		return status;
 	}
+	
 	public void setStatus(Status status) {
 		this.status = status;
 	}
+	
 	public long getNumero() {
 		return numero;
 	}
@@ -37,14 +40,23 @@ public class Conta {
 	public LocalDate getDataAbertura() {
 		return dataAbertura;
 	}
+	
 	public void setDataAbertura(LocalDate dataAbertura) {
 		this.dataAbertura = dataAbertura;
 	}
+	
 	public double getSaldo() {
 		return saldo;
 	}
 	
+	public TipoConta getTipoConta() {
+		return tipoConta;
+	}
 	
+	public void setTipoConta(TipoConta tipoConta) {
+		this.tipoConta = tipoConta;
+	}
+
 	public Escore calcularEscore() {
 		double valor = 0;
 		if (status == Status.BLOQUEADA) {
