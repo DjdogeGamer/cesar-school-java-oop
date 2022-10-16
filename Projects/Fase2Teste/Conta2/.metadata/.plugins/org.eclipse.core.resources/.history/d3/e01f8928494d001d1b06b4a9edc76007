@@ -1,0 +1,9 @@
+package br.com.cesarschool.poo.telas;
+
+public class ProgramaCadastroProduto {
+
+	public static void main(String[] args) {
+		TelaConta tela = new TelaConta();
+		tela.executaTela();
+	}
+}

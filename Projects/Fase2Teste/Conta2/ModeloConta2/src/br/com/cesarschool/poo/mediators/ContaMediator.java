@@ -3,6 +3,8 @@ package br.com.cesarschool.poo.mediators;
 import java.time.LocalDate;
 
 import br.com.cesarschool.poo.entidades.Conta;
+import br.com.cesarschool.poo.entidades.StatusConta;
+import br.com.cesarschool.poo.repositorios.OperacoesAlterar;
 import br.com.cesarschool.poo.repositorios.RepositorioConta;
 
 public class ContaMediator {
@@ -47,6 +49,21 @@ public class ContaMediator {
 	}	
 	public Conta buscar(long numero) {
 		return repositorioConta.retornarConta(numero);
+	}
+	public Conta mudarParaStatus(Conta conta, StatusConta statusNovo) {
+		return new Conta(conta.getNumero(), statusNovo, conta.getDataAbertura());
+	}
+	public Conta mudarSaldo(Conta conta, OperacoesAlterar operacao, double valor) {
+		double saldoAntigo = conta.getSaldo();
+		double saldoNovo = saldoAntigo;
+		if (operacao == OperacoesAlterar.CREDITAR) {
+			saldoNovo = saldoAntigo += valor;
+		} else if (operacao == OperacoesAlterar.DEBITAR) {
+			saldoNovo = saldoAntigo -= valor;
+		}
+		Conta contaNova = new Conta(conta.getNumero(), conta.getStatus(), conta.getDataAbertura());
+		contaNova.setSaldo(saldoNovo);
+		return contaNova;
 	}
 	
 	private StatusValidacaoConta validar(Conta conta) {

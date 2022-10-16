@@ -6,3 +6,5 @@
 1665913057334	Rename field 'MENSAGEM_PRODUTO_NAO_ENCONTRADO'
 1665913514528	Move compilation unit
 1665914603816	Rename type 'OperacoesAlterarMediator'
+1665921195139	Rename type 'TelaProduto'
+1665921212649	Rename type 'ProgramaCadastroProduto'

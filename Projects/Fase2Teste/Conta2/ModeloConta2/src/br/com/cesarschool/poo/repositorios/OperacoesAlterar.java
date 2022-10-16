@@ -4,7 +4,9 @@ public enum OperacoesAlterar {
 	ALTERAR_DATA(1, "DATA"), 
 	ENCERRAR(2, "ENCERRAR"), 
 	BLOQUEAR(3, "BLOQUEAR"),
-	ATIVAR(4, "ATIVAR");
+	ATIVAR(4, "ATIVAR"),
+	CREDITAR(5, "CREDITAR"),
+	DEBITAR(6, "DEBITAR");
 	
 	private OperacoesAlterar(int codigo, String descricao) {
 		this.codigo = codigo;
